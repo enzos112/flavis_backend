@@ -32,21 +32,16 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public List<Cliente> listarTodos() {
-        // 1. Obtenemos todos los clientes registrados
         List<Cliente> todosLosClientes = clienteRepository.findAll();
 
-        // 2. Usamos un Stream para filtrar y procesar
         return todosLosClientes.stream()
                 .map(c -> {
-                    // Buscamos solo pedidos NO anulados
                     List<Pedido> pedidosValidos = pedidoRepository.findByCliente(c).stream()
                             .filter(p -> p.getAnulado() != null && !p.getAnulado())
                             .toList();
 
-                    // Si no tiene pedidos válidos, devolvemos null para filtrarlo luego
                     if (pedidosValidos.isEmpty()) return null;
 
-                    // Llenamos los datos para los clientes que SÍ tienen ventas reales
                     c.setTotalPedidos(pedidosValidos.size());
 
                     pedidosValidos.stream()
@@ -61,7 +56,7 @@ public class ClienteServiceImpl implements ClienteService {
                     c.setTotalGastado(sumaTotal);
                     return c;
                 })
-                .filter(java.util.Objects::nonNull) // Eliminamos los clientes que devolvieron null (sin pedidos válidos)
+                .filter(java.util.Objects::nonNull)
                 .toList();
     }
 

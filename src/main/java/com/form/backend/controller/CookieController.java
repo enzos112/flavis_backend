@@ -2,7 +2,7 @@ package com.form.backend.controller;
 
 import com.form.backend.model.Cookie;
 import com.form.backend.service.CookieService;
-import com.form.backend.service.CloudinaryService; // Asegúrate de importar tu interfaz
+import com.form.backend.service.CloudinaryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +51,6 @@ public class CookieController {
         return ResponseEntity.noContent().build();
     }
 
-    // NUEVO ENDPOINT PARA ACTUALIZAR
     @PutMapping("/{id}")
     public ResponseEntity<Cookie> actualizar(@PathVariable Long id, @Valid @RequestBody Cookie cookie) {
         return ResponseEntity.ok(cookieService.actualizar(id, cookie));

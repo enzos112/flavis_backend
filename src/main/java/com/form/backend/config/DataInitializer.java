@@ -13,7 +13,6 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // Inyectamos los valores desde application.properties
     @Value("${flavis.admin1.email}")
     private String admin1Email;
 
@@ -28,10 +27,8 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Crear Admin 1 si no existe
         crearAdminSiNoExiste(admin1Email, admin1Pass);
 
-        // Crear Admin 2 si no existe
         crearAdminSiNoExiste(admin2Email, admin2Pass);
     }
 
@@ -40,7 +37,7 @@ public class DataInitializer implements CommandLineRunner {
             Usuario nuevoAdmin = new Usuario();
             nuevoAdmin.setEmail(email);
             nuevoAdmin.setPassword(password);
-            nuevoAdmin.setRol("ROLE_ADMIN"); // AGREGA EL PREFIJO ROLE_
+            nuevoAdmin.setRol("ROLE_ADMIN");
             usuarioRepository.save(nuevoAdmin);
         }
     }

@@ -20,24 +20,20 @@ public class PedidoServiceImpl implements PedidoService {
     @Autowired
     private CookieRepository cookieRepository;
 
-    // Reemplaza tu método registrarPedido por este:
     @Override
     @Transactional
     public Pedido registrarPedido(Pedido pedido) {
-        // 1. Obtener campaña activa
         PreVenta activa = preVentaRepository.findByActivoTrueOrderByIdDesc()
                 .stream().findFirst()
                 .orElseThrow(() -> new RuntimeException("No hay pre-venta abierta."));
 
         pedido.setPreVenta(activa);
 
-        // 2. Vincular cliente
         Cliente clienteExistente = clienteRepository.findById(pedido.getCliente().getCelular()).orElse(null);
         if (clienteExistente != null) {
             pedido.setCliente(clienteExistente);
         }
 
-        // 3. Vincular detalles y guardar pedido
         if (pedido.getDetalles() != null) {
             pedido.getDetalles().forEach(detalle -> detalle.setPedido(pedido));
         }
@@ -45,14 +41,12 @@ public class PedidoServiceImpl implements PedidoService {
 
         Pedido guardado = pedidoRepository.save(pedido);
 
-        // --- LOGICA DE LIMPIEZA AUTOMÁTICA POR STOCK ---
         Long vendidosActualizados = pedidoRepository.countTotalCookiesByPreVentaId(activa.getId());
         if (vendidosActualizados >= activa.getStockMaximo()) {
 
             activa.setActivo(false);
             preVentaRepository.save(activa);
 
-            // Ejecutamos limpieza de anulados de esta campaña
             List<Pedido> anulados = pedidoRepository.findByPreVentaIdAndAnuladoTrue(activa.getId());
             pedidoRepository.deleteAll(anulados);
         }

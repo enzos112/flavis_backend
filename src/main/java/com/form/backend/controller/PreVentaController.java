@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/preventas")
-@CrossOrigin(origins = "*") // Permite peticiones desde React
+@CrossOrigin(origins = "*")
 public class PreVentaController {
 
     @Autowired
@@ -34,7 +34,6 @@ public class PreVentaController {
         return preVentaService.listarHistorial();
     }
 
-    // Dentro de PreVentaController.java
     @PutMapping("/{id}")
     public ResponseEntity<PreVenta> actualizar(@PathVariable Long id, @Valid @RequestBody PreVenta pv) {
         return ResponseEntity.ok(preVentaService.actualizar(id, pv));

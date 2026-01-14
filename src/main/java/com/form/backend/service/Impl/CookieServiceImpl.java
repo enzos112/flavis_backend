@@ -34,7 +34,6 @@ public class CookieServiceImpl implements CookieService {
         cookieRepository.deleteById(id);
     }
 
-    // IMPLEMENTACIÓN DEL NUEVO MÉTODO
     @Override
     public Cookie actualizar(Long id, Cookie cookieActualizada) {
         return cookieRepository.findById(id).map(cookie -> {
@@ -42,7 +41,7 @@ public class CookieServiceImpl implements CookieService {
             cookie.setDescripcion(cookieActualizada.getDescripcion());
             cookie.setPrecio(cookieActualizada.getPrecio());
             cookie.setImagenUrl(cookieActualizada.getImagenUrl());
-            cookie.setActivo(cookieActualizada.getActivo()); // Aquí manejamos mostrar/ocultar
+            cookie.setActivo(cookieActualizada.getActivo());
             return cookieRepository.save(cookie);
         }).orElseThrow(() -> new RuntimeException("Galleta no encontrada con id: " + id));
     }

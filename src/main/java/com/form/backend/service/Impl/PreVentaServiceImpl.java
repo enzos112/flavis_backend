@@ -64,15 +64,12 @@ public class PreVentaServiceImpl implements PreVentaService {
     @Override
     @Transactional
     public void cerrarPreVenta(Long id) {
-        // 1. Buscar la pre-venta
         preVentaRepository.findById(id).ifPresent(pv -> {
-            if (!pv.getActivo()) return; // Si ya está cerrada, no hacer nada
+            if (!pv.getActivo()) return;
 
-            // 2. Buscar pedidos anulados para limpiar espacio y Cloudinary
             List<Pedido> anulados = pedidoRepository.findByPreVentaIdAndAnuladoTrue(id);
 
             for (Pedido p : anulados) {
-                // Limpieza de imagen en Cloudinary
                 String publicId = extraerPublicId(p.getComprobanteUrl());
                 if (publicId != null) {
                     try {
@@ -81,11 +78,9 @@ public class PreVentaServiceImpl implements PreVentaService {
                         System.err.println("Error eliminando imagen de pedido anulado: " + e.getMessage());
                     }
                 }
-                // Borrar físicamente de la BD
                 pedidoRepository.delete(p);
             }
 
-            // 3. Desactivar campaña
             pv.setActivo(false);
             preVentaRepository.save(pv);
             System.out.println("Campaña '" + pv.getNombreCampania() + "' cerrada automáticamente.");
@@ -95,7 +90,6 @@ public class PreVentaServiceImpl implements PreVentaService {
     private String extraerPublicId(String url) {
         try {
             if (url == null || !url.contains("/")) return null;
-            // Extrae el nombre del archivo sin extensión
             String fileName = url.substring(url.lastIndexOf("/") + 1);
             return fileName.contains(".") ? fileName.substring(0, fileName.lastIndexOf(".")) : fileName;
         } catch (Exception e) { return null; }

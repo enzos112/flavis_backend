@@ -17,7 +17,6 @@ public class TareaLimpiezaAutomatica {
     @Autowired
     private PreVentaService preVentaService;
 
-    // Se ejecuta cada 5 minutos
     @Scheduled(fixedRate = 300000)
     public void verificarCierrePorFecha() {
         LocalDateTime ahora = LocalDateTime.now();

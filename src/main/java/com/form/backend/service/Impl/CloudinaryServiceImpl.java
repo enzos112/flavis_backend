@@ -25,7 +25,6 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         File file = convert(multipartFile);
         Map result = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
 
-        // LOG DE SEGUIMIENTO
         System.out.println("DEBUG CLOUDINARY: Archivo subido con éxito");
         System.out.println("DEBUG URL GENERADA: " + result.get("url"));
 

@@ -19,7 +19,7 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.MERGE) // Agrega esto
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "cliente_celular", nullable = false)
     private Cliente cliente;
 

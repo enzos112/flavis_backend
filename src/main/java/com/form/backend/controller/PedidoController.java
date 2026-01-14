@@ -26,9 +26,6 @@ public class PedidoController {
         }
     }
 
-    // --- ESTE ES EL MÉTODO UNIFICADO ---
-    // Responde a: GET /api/pedidos/preventa/{id}
-    // Funciona tanto para el historial como para la vista actual.
     @GetMapping("/preventa/{id}")
     public ResponseEntity<List<Pedido>> listarPorPreVenta(@PathVariable Long id) {
         List<Pedido> pedidos = pedidoService.listarPorPreVenta(id);

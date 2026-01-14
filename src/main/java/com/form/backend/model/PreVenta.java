@@ -20,12 +20,10 @@ public class PreVenta {
     private String nombreCampania;
 
     @NotNull(message = "La fecha de apertura es obligatoria")
-    // AGREGAR: Patrón de fecha y Zona Horaria de Lima
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "America/Lima")
     private LocalDateTime fechaApertura;
 
     @NotNull(message = "La fecha de cierre es obligatoria")
-    // AGREGAR: Patrón de fecha y Zona Horaria de Lima
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "America/Lima")
     private LocalDateTime fechaCierre;
 

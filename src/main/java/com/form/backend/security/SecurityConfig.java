@@ -22,7 +22,6 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
-                // Dentro de tu filterChain...
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
@@ -30,9 +29,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/preventas/**").permitAll()
                         .requestMatchers("/api/pedidos/**").permitAll()
 
-                        // AJUSTE AQUÍ:
                         .requestMatchers("/api/clientes/buscar").permitAll()
-                        // 2. Solo el ADMIN puede ver la lista completa (GET /api/clientes)
                         .requestMatchers(HttpMethod.GET, "/api/pedidos/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/clientes").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/clientes").permitAll()

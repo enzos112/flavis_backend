@@ -18,7 +18,7 @@ public class PedidoDetalle {
 
     @ManyToOne
     @JoinColumn(name = "pedido_id")
-    @JsonIgnore // Evita bucles infinitos en el JSON
+    @JsonIgnore
     private Pedido pedido;
 
     @ManyToOne
@@ -28,5 +28,5 @@ public class PedidoDetalle {
     @Min(value = 1, message = "La cantidad mínima es 1")
     private Integer cantidad;
 
-    private Double precioUnitario; // Precio al momento de la compra
+    private Double precioUnitario;
 }

@@ -15,7 +15,7 @@ public class Usuario {
     private String email;
 
     @Column(nullable = false)
-    private String password; // Recuerda que esto se debe guardar encriptado (Bcrypt)
+    private String password;
 
-    private String rol = "ADMIN"; // Por defecto todos los de esta tabla serán ADMIN
+    private String rol = "ADMIN";
 }
