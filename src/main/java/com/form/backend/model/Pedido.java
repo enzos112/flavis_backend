@@ -1,11 +1,8 @@
 package com.form.backend.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
-import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +24,8 @@ public class Pedido {
     @JoinColumn(name = "pre_venta_id", nullable = false)
     private PreVenta preVenta;
 
-    @NotNull
+    @NotNull(message = "El monto total es obligatorio")
+    @DecimalMin(value = "0.1", message = "El monto debe ser mayor a 0")
     private Double montoTotal;
 
     @NotBlank(message = "El comprobante de pago es obligatorio")
