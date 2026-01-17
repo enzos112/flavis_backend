@@ -11,10 +11,12 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     List<Pedido> findByPreVentaId(Long preVentaId);
 
-    @Query("SELECT SUM(d.cantidad) FROM PedidoDetalle d WHERE d.pedido.preVenta.id = :id AND d.pedido.anulado = false")
+    @Query("SELECT COALESCE(SUM(d.cantidad), 0) FROM PedidoDetalle d WHERE d.pedido.preVenta.id = :id AND d.pedido.anulado = false")
     Long countTotalCookiesByPreVentaId(@Param("id") Long id);
 
     List<Pedido> findByCliente(Cliente cliente);
 
     List<Pedido> findByPreVentaIdAndAnuladoTrue(Long preVentaId);
+
+
 }

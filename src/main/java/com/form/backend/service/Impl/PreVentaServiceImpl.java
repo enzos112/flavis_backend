@@ -37,7 +37,14 @@ public class PreVentaServiceImpl implements PreVentaService {
     public Optional<PreVenta> obtenerActiva() {
         return preVentaRepository.findByActivoTrueOrderByIdDesc().stream().findFirst().map(pv -> {
             Long vendidos = pedidoRepository.countTotalCookiesByPreVentaId(pv.getId());
-            pv.setStockActual(vendidos != null ? vendidos : 0L);
+            long totalVendidos = (vendidos != null ? vendidos : 0L);
+            pv.setStockActual(totalVendidos);
+
+            if (totalVendidos >= pv.getStockMaximo()) {
+                cerrarPreVenta(pv.getId());
+                return null;
+            }
+
             return pv;
         });
     }
@@ -52,8 +59,17 @@ public class PreVentaServiceImpl implements PreVentaService {
             pv.setHorarioEntrega(nuevosDatos.getHorarioEntrega());
             pv.setMensajeCierre(nuevosDatos.getMensajeCierre());
             pv.setQrUrl(nuevosDatos.getQrUrl());
-            pv.setActivo(nuevosDatos.getActivo());
             pv.setStockMaximo(nuevosDatos.getStockMaximo());
+
+            Long vendidos = pedidoRepository.countTotalCookiesByPreVentaId(id);
+            long totalVendidos = (vendidos != null ? vendidos : 0L);
+
+            if (totalVendidos >= nuevosDatos.getStockMaximo()) {
+                pv.setActivo(false);
+            } else {
+                pv.setActivo(nuevosDatos.getActivo());
+            }
+
             return preVentaRepository.save(pv);
         }).orElseThrow(() -> new RuntimeException("Error ID: " + id));
     }

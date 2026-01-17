@@ -30,23 +30,28 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setPreVenta(activa);
 
         Cliente clienteExistente = clienteRepository.findById(pedido.getCliente().getCelular()).orElse(null);
+
         if (clienteExistente != null) {
+            clienteExistente.setGuardarDatos(pedido.getGuardarDatos());
             pedido.setCliente(clienteExistente);
+        } else {
+            pedido.getCliente().setGuardarDatos(pedido.getGuardarDatos());
         }
 
         if (pedido.getDetalles() != null) {
             pedido.getDetalles().forEach(detalle -> detalle.setPedido(pedido));
         }
-        if (pedido.getCliente() != null) clienteRepository.save(pedido.getCliente());
+
+        if (pedido.getCliente() != null) {
+            clienteRepository.save(pedido.getCliente());
+        }
 
         Pedido guardado = pedidoRepository.save(pedido);
 
         Long vendidosActualizados = pedidoRepository.countTotalCookiesByPreVentaId(activa.getId());
         if (vendidosActualizados >= activa.getStockMaximo()) {
-
             activa.setActivo(false);
             preVentaRepository.save(activa);
-
             List<Pedido> anulados = pedidoRepository.findByPreVentaIdAndAnuladoTrue(activa.getId());
             pedidoRepository.deleteAll(anulados);
         }

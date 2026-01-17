@@ -45,4 +45,7 @@ public class Pedido {
     private List<PedidoDetalle> detalles;
 
     private boolean visto = false;
+
+    @Column(nullable = false)
+    private Boolean guardarDatos = false;
 }

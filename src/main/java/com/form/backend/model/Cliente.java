@@ -34,4 +34,7 @@ public class Cliente {
 
     @Transient
     private Double totalGastado = 0.0;
+
+    @Column(nullable = false)
+    private Boolean guardarDatos = false;
 }

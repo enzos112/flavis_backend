@@ -29,6 +29,6 @@ public class Cookie {
 
     private Boolean activo = true;
 
-    @NotNull
-    private Integer stockActual;
+    @NotNull(message = "El stock inicial no puede ser nulo")
+    private Integer stockActual = 0;
 }
