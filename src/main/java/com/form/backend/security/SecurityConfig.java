@@ -48,11 +48,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/pedidos/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/preventas/activa").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/clientes/buscar").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/cookies/upload").permitAll()
 
                         // RUTAS PROTEGIDAS
                         .requestMatchers("/api/clientes/**").authenticated()
                         .requestMatchers("/api/preventas/**").authenticated()
-                        .requestMatchers("/api/cookies/upload").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/cookies").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/cookies/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/cookies/**").authenticated()
