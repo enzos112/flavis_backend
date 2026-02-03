@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.form</groupId>
-	<artifactId>form</artifactId>
+    <artifactId>flavis_backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>form</name>
 	<description>Demo project for Spring Boot</description>
