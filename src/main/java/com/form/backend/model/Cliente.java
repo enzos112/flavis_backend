@@ -1,17 +1,14 @@
 package com.form.backend.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-
-import jakarta.persistence.Transient;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "clientes")
@@ -33,6 +30,9 @@ public class Cliente {
     private LocalDateTime fechaRegistro = LocalDateTime.now();
 
     private String notas;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Direccion> direcciones = new ArrayList<>();
 
     @Transient
     private Integer totalPedidos;

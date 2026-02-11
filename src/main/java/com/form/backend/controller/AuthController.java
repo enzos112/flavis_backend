@@ -2,7 +2,7 @@ package com.form.backend.controller;
 
 import com.form.backend.model.Usuario;
 import com.form.backend.repositorio.UsuarioRepository;
-import com.form.backend.security.JwtUtils; // Importar esto
+import com.form.backend.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ public class AuthController {
         return usuarioRepository.findByEmail(email)
                 .filter(user -> passwordEncoder.matches(password, user.getPassword()))
                 .map(user -> {
-                    String token = jwtUtils.generateToken(user.getEmail());
+                    String token = jwtUtils.generateToken(user.getEmail(), user.getRol());
 
                     Map<String, Object> response = new HashMap<>();
                     response.put("token", token);

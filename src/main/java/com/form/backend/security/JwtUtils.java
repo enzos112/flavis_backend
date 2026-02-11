@@ -1,11 +1,14 @@
 package com.form.backend.security;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtils {
@@ -17,13 +20,27 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-    public String generateToken(String email) {
+    // MODIFICADO: Ahora recibe el rol para meterlo en el "claim"
+    public String generateToken(String email, String role) {
         return Jwts.builder()
                 .subject(email)
+                .claim("role", role) // Guardamos el rol dentro del token
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSigningKey())
                 .compact();
+    }
+
+    // NUEVO MÉTODO: El que tu filtro estaba buscando
+    public List<SimpleGrantedAuthority> extractAuthorities(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        String role = claims.get("role", String.class);
+        return List.of(new SimpleGrantedAuthority(role));
     }
 
     public String extractEmail(String token) {

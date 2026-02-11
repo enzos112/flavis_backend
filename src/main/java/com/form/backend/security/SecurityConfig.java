@@ -11,7 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter; // Importar esto
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -36,9 +36,7 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
@@ -49,19 +47,17 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/preventas/activa").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/clientes/buscar").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/cookies/upload").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/packs/**").permitAll()
 
-                        // RUTAS PROTEGIDAS
+                        // RUTAS PROTEGIDAS (ADMIN)
                         .requestMatchers("/api/clientes/**").authenticated()
                         .requestMatchers("/api/preventas/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/api/cookies").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/api/cookies/**").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/cookies/**").authenticated()
+                        .requestMatchers("/api/cookies/**").authenticated()
+                        .requestMatchers("/api/packs/**").authenticated()
 
                         .anyRequest().authenticated()
                 )
-
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable);
 
@@ -71,12 +67,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "https://flavis-cookies.vercel.app"
         ));
-
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization"));

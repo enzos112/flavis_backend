@@ -1,5 +1,6 @@
 package com.form.backend.controller;
 
+import com.form.backend.dto.ClienteDTO;
 import com.form.backend.model.Cliente;
 import com.form.backend.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,9 @@ public class ClienteController {
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<Cliente> obtenerPorCelular(@RequestParam("telefono") String celular) {
+    public ResponseEntity<ClienteDTO> obtenerPorCelular(@RequestParam("telefono") String celular) {
         return clienteService.obtenerPorCelular(celular)
-                .map(ResponseEntity::ok)
+                .map(c -> ResponseEntity.ok(new ClienteDTO(c.getNombre(), c.getApellido())))
                 .orElse(ResponseEntity.notFound().build());
     }
 

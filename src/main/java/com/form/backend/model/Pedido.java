@@ -20,6 +20,15 @@ public class Pedido {
     @JoinColumn(name = "cliente_celular", nullable = false)
     private Cliente cliente;
 
+    @NotBlank(message = "El tipo de entrega es obligatorio")
+    private String tipoEntrega;
+
+    private Double costoEnvio = 0.0;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "direccion_id")
+    private Direccion direccion;
+
     @ManyToOne
     @JoinColumn(name = "pre_venta_id", nullable = false)
     private PreVenta preVenta;
