@@ -19,18 +19,18 @@ public class PedidoServiceImpl implements PedidoService {
     private ClienteRepository clienteRepository;
     @Autowired
     private CookieRepository cookieRepository;
+    @Autowired
+    private PackRepository packRepository;
 
     @Override
     @Transactional
     public Pedido registrarPedido(Pedido pedido) {
-        // 1. Obtener la preventa activa
         PreVenta activa = preVentaRepository.findByActivoTrueOrderByIdDesc()
                 .stream().findFirst()
                 .orElseThrow(() -> new RuntimeException("No hay pre-venta abierta."));
 
         pedido.setPreVenta(activa);
 
-        // 2. Lógica de Cliente (Persistencia de datos)
         Cliente clienteInput = pedido.getCliente();
         Cliente clienteExistente = clienteRepository.findById(clienteInput.getCelular()).orElse(null);
 
@@ -43,7 +43,6 @@ public class PedidoServiceImpl implements PedidoService {
             pedido.getCliente().setGuardarDatos(pedido.getGuardarDatos());
         }
 
-        // 3. Lógica de Logística (Delivery vs Recojo)
         if ("DELIVERY".equals(pedido.getTipoEntrega()) && pedido.getDireccion() != null) {
             pedido.getDireccion().setId(null);
         } else if ("RECOJO".equals(pedido.getTipoEntrega())) {
@@ -51,18 +50,15 @@ public class PedidoServiceImpl implements PedidoService {
             pedido.setCostoEnvio(0.0);
         }
 
-        // 4. Vincular detalles al pedido
         if (pedido.getDetalles() != null) {
             pedido.getDetalles().forEach(detalle -> detalle.setPedido(pedido));
         }
 
-        // 5. Guardar cliente y pedido
         if (pedido.getCliente() != null) {
             clienteRepository.save(pedido.getCliente());
         }
 
         Pedido guardado = pedidoRepository.save(pedido);
-
 
         int galletasVendidasEnEstePedido = pedido.getDetalles().stream()
                 .mapToInt(d -> Boolean.TRUE.equals(d.getEsPack()) ? d.getCantidad() * 4 : d.getCantidad())
@@ -82,14 +78,21 @@ public class PedidoServiceImpl implements PedidoService {
 
         for (PedidoDetalle detalle : pedido.getDetalles()) {
             if (Boolean.TRUE.equals(detalle.getEsPack()) && detalle.getPack() != null) {
-                for (Cookie c : detalle.getPack().getGalletas()) {
-                    c.setStockActual(c.getStockActual() - detalle.getCantidad());
-                    cookieRepository.save(c);
+                Pack realPack = packRepository.findById(detalle.getPack().getId()).orElse(null);
+                if (realPack != null) {
+                    for (Cookie c : realPack.getGalletas()) {
+                        Cookie realCookie = cookieRepository.findById(c.getId()).get();
+                        int stockActual = (realCookie.getStockActual() != null) ? realCookie.getStockActual() : 0;
+                        realCookie.setStockActual(stockActual - detalle.getCantidad());
+                        cookieRepository.save(realCookie);
+                    }
                 }
             } else if (detalle.getCookie() != null) {
-                Cookie c = detalle.getCookie();
-                c.setStockActual(c.getStockActual() - detalle.getCantidad());
-                cookieRepository.save(c);
+                Cookie realCookie = cookieRepository.findById(detalle.getCookie().getId())
+                        .orElseThrow(() -> new RuntimeException("Galleta no encontrada"));
+                int stockActual = (realCookie.getStockActual() != null) ? realCookie.getStockActual() : 0;
+                realCookie.setStockActual(stockActual - detalle.getCantidad());
+                cookieRepository.save(realCookie);
             }
         }
 
