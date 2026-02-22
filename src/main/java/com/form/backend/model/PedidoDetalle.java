@@ -4,12 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "pedido_detalles")
 @Data
+@ToString(exclude = "pedido")
+@EqualsAndHashCode(exclude = "pedido")
 public class PedidoDetalle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +28,7 @@ public class PedidoDetalle {
     @JoinColumn(name = "cookie_id", nullable = true)
     private Cookie cookie;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pack_id", nullable = true)
     private Pack pack;
 

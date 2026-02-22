@@ -15,6 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,22 +42,30 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // RUTAS PÚBLICAS
-                        .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/cookies/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/pedidos/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/preventas/activa").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/clientes/buscar").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/cookies/upload").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/packs/**").permitAll()
+                                .requestMatchers("/api/auth/login").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/cookies/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/preventas/activa").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/clientes/buscar").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/cookies/upload").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/packs", "/api/packs/**").permitAll()
 
-                        // RUTAS PROTEGIDAS (ADMIN)
-                        .requestMatchers("/api/clientes/**").authenticated()
-                        .requestMatchers("/api/preventas/**").authenticated()
-                        .requestMatchers("/api/cookies/**").authenticated()
-                        .requestMatchers("/api/packs/**").authenticated()
+                                .requestMatchers(HttpMethod.POST, "/api/pedidos", "/api/pedidos/**").permitAll()
 
-                        .anyRequest().authenticated()
+                                .requestMatchers(HttpMethod.GET, "/api/pedidos", "/api/pedidos/**").authenticated()
+                                .requestMatchers(HttpMethod.PATCH, "/api/pedidos/**").authenticated()
+
+                                .requestMatchers("/api/egresos", "/api/egresos/**").authenticated()
+
+                                .requestMatchers("/api/preventas", "/api/preventas/**").authenticated()
+
+                                .requestMatchers("/api/clientes", "/api/clientes/**").authenticated()
+
+                                .requestMatchers("/api/cookies", "/api/cookies/**").authenticated()
+                                .requestMatchers("/api/packs", "/api/packs/**").authenticated()
+
+                                .requestMatchers("/api/stats", "/api/stats/**").authenticated()
+
+                                .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -79,5 +89,12 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> {
+            throw new UsernameNotFoundException("User not found");
+        };
     }
 }

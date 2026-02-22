@@ -8,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map; // <-- Importante para el Map
 
 @RestController
 @RequestMapping("/api/pedidos")
-@CrossOrigin(origins = "*")
 public class PedidoController {
 
     @Autowired
@@ -54,6 +54,17 @@ public class PedidoController {
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{id}/listo")
+    public ResponseEntity<?> marcarComoListo(@PathVariable Long id, @RequestBody Map<String, Boolean> payload) {
+        try {
+            Boolean estado = payload.getOrDefault("estado", true);
+            pedidoService.marcarComoListo(id, estado);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al actualizar estado: " + e.getMessage());
         }
     }
 }

@@ -11,4 +11,5 @@ public class PackRequestDTO {
     private String imagenUrl;
     private boolean activo;
     private List<Long> galletasIds;
+    private Double costoProduccion;
 }

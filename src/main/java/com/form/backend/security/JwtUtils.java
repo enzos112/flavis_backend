@@ -31,7 +31,6 @@ public class JwtUtils {
                 .compact();
     }
 
-    // NUEVO MÉTODO: El que tu filtro estaba buscando
     public List<SimpleGrantedAuthority> extractAuthorities(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(getSigningKey())
@@ -40,6 +39,11 @@ public class JwtUtils {
                 .getPayload();
 
         String role = claims.get("role", String.class);
+
+        if (role == null) {
+            role = "ROLE_USER";
+        }
+
         return List.of(new SimpleGrantedAuthority(role));
     }
 

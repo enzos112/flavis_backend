@@ -11,4 +11,6 @@ public interface PedidoService {
 
     void toggleAnulacion(Long id);
     void marcarComoVisto(Long id);
+    void marcarComoListo(Long id, Boolean estado);
+
 }

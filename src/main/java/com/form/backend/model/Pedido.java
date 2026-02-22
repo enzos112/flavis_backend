@@ -3,13 +3,17 @@ package com.form.backend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "pedidos")
 @Data
+@Table(name = "pedidos")
+@ToString(exclude = "detalles")
+@EqualsAndHashCode(exclude = "detalles")
 public class Pedido {
 
     @Id
@@ -24,6 +28,9 @@ public class Pedido {
     private String tipoEntrega;
 
     private Double costoEnvio = 0.0;
+
+    @Column(nullable = false)
+    private Boolean listo = false;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "direccion_id")
@@ -48,7 +55,7 @@ public class Pedido {
     @Column(updatable = false)
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<PedidoDetalle> detalles;
 
     private boolean visto = false;

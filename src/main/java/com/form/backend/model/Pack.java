@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "packs")
-@Data // <--- Genera Getters, Setters, toString, etc.
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pack {
@@ -21,8 +21,9 @@ public class Pack {
     private Double precio;
     private String imagenUrl;
     private boolean activo = true;
+    private Double costoProduccion = 0.0;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "pack_cookies",
             joinColumns = @JoinColumn(name = "pack_id"),

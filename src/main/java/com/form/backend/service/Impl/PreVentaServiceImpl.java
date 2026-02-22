@@ -99,7 +99,6 @@ public class PreVentaServiceImpl implements PreVentaService {
 
             pv.setActivo(false);
             preVentaRepository.save(pv);
-            System.out.println("Campaña '" + pv.getNombreCampania() + "' cerrada automáticamente.");
         });
     }
 

@@ -42,6 +42,7 @@ public class CookieServiceImpl implements CookieService {
             cookie.setPrecio(cookieActualizada.getPrecio());
             cookie.setImagenUrl(cookieActualizada.getImagenUrl());
             cookie.setActivo(cookieActualizada.getActivo());
+            cookie.setCostoProduccion(cookieActualizada.getCostoProduccion());
             return cookieRepository.save(cookie);
         }).orElseThrow(() -> new RuntimeException("Galleta no encontrada con id: " + id));
     }

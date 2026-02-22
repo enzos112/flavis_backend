@@ -28,8 +28,8 @@ public class PackServiceImpl implements PackService {
 
     @Override
     public Pack guardar(PackRequestDTO dto) {
-        if (dto.getGalletasIds().size() != 4) {
-            throw new RuntimeException("Un pack debe tener exactamente 4 galletas");
+        if (dto.getGalletasIds() == null || dto.getGalletasIds().isEmpty()) {
+            throw new RuntimeException("Un pack debe tener al menos 1 galleta seleccionada");
         }
 
         Pack pack = new Pack();
@@ -55,6 +55,7 @@ public class PackServiceImpl implements PackService {
         pack.setPrecio(dto.getPrecio());
         pack.setImagenUrl(dto.getImagenUrl());
         pack.setActivo(dto.isActivo());
+        pack.setCostoProduccion(dto.getCostoProduccion());
 
         List<Cookie> galletasSeleccionadas = dto.getGalletasIds().stream()
                 .map(cookieId -> cookieRepository.findById(cookieId)

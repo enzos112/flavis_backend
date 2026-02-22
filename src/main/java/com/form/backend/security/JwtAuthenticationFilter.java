@@ -32,9 +32,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String email = jwtUtils.extractEmail(token);
                 List<SimpleGrantedAuthority> authorities = jwtUtils.extractAuthorities(token);
 
-                // ESTA LÍNEA ES PARA DEBUG: Revisa tu consola de Java al intentar crear el pack
-                System.out.println("Usuario: " + email + " | Autoridades extraídas: " + authorities);
-
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(email, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(auth);

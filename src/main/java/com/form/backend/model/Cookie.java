@@ -3,6 +3,8 @@ package com.form.backend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -31,4 +33,8 @@ public class Cookie {
 
     @NotNull(message = "El stock inicial no puede ser nulo")
     private Integer stockActual = 0;
+
+    @NotNull(message = "El costo de producción es obligatorio")
+    @DecimalMin(value = "0.0", message = "El costo no puede ser negativo")
+    private Double costoProduccion = 0.0;
 }

@@ -25,9 +25,6 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         File file = convert(multipartFile);
         Map result = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
 
-        System.out.println("DEBUG CLOUDINARY: Archivo subido con éxito");
-        System.out.println("DEBUG URL GENERADA: " + result.get("url"));
-
         if (!Files.deleteIfExists(file.toPath())) {
             throw new IOException("No se pudo eliminar el archivo temporal");
         }

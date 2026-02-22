@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,6 +15,8 @@ import java.util.List;
 @Entity
 @Table(name = "clientes")
 @Data
+@ToString(exclude = "direcciones")
+@EqualsAndHashCode(exclude = "direcciones")
 public class Cliente {
 
     @Id
@@ -31,7 +35,7 @@ public class Cliente {
 
     private String notas;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Direccion> direcciones = new ArrayList<>();
 
     @Transient

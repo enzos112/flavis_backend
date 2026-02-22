@@ -160,4 +160,14 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setVisto(true);
         pedidoRepository.save(pedido);
     }
+
+    @Override
+    @Transactional
+    public void marcarComoListo(Long id, Boolean estado) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado con ID: " + id));
+
+        pedido.setListo(estado != null && estado);
+        pedidoRepository.save(pedido);
+    }
 }
