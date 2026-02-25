@@ -51,7 +51,21 @@ public class PedidoServiceImpl implements PedidoService {
         }
 
         if (pedido.getDetalles() != null) {
-            pedido.getDetalles().forEach(detalle -> detalle.setPedido(pedido));
+            for (PedidoDetalle detalle : pedido.getDetalles()) {
+                detalle.setPedido(pedido);
+
+                if (Boolean.TRUE.equals(detalle.getEsPack()) && detalle.getPack() != null) {
+                    Pack realPack = packRepository.findById(detalle.getPack().getId()).orElse(null);
+                    if (realPack != null) {
+                        detalle.setCostoUnitario(realPack.getCostoProduccion() != null ? realPack.getCostoProduccion() : 0.0);
+                    }
+                } else if (detalle.getCookie() != null) {
+                    Cookie realCookie = cookieRepository.findById(detalle.getCookie().getId()).orElse(null);
+                    if (realCookie != null) {
+                        detalle.setCostoUnitario(realCookie.getCostoProduccion() != null ? realCookie.getCostoProduccion() : 0.0);
+                    }
+                }
+            }
         }
 
         if (pedido.getCliente() != null) {

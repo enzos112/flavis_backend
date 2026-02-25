@@ -38,4 +38,6 @@ public class PedidoDetalle {
     private Integer cantidad;
 
     private Double precioUnitario;
+
+    private Double costoUnitario;
 }
