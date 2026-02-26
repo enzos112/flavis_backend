@@ -4,7 +4,6 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.form.backend.model.Cookie;
 import com.form.backend.model.Pedido;
-import com.form.backend.model.PedidoDetalle;
 import com.form.backend.model.PreVenta;
 import com.form.backend.repositorio.CookieRepository;
 import com.form.backend.repositorio.PreVentaRepository;
@@ -56,7 +55,11 @@ public class PreVentaServiceImpl implements PreVentaService {
             pv.setFechaApertura(nuevosDatos.getFechaApertura());
             pv.setFechaCierre(nuevosDatos.getFechaCierre());
             pv.setFechaEntrega(nuevosDatos.getFechaEntrega());
+
             pv.setHorarioEntrega(nuevosDatos.getHorarioEntrega());
+            pv.setHorarioDelivery(nuevosDatos.getHorarioDelivery());
+            pv.setHorarioRecojo(nuevosDatos.getHorarioRecojo());
+
             pv.setMensajeCierre(nuevosDatos.getMensajeCierre());
             pv.setQrUrl(nuevosDatos.getQrUrl());
             pv.setStockMaximo(nuevosDatos.getStockMaximo());

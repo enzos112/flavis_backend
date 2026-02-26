@@ -1,6 +1,6 @@
 package com.form.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat; // Asegúrate de importar esto
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,8 +31,10 @@ public class PreVenta {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaEntrega;
 
-    @NotNull(message = "La hora de entrega es obligatoria")
     private String horarioEntrega;
+
+    private String horarioDelivery;
+    private String horarioRecojo;
 
     private String mensajeCierre = "¡Gracias! Pronto volveremos con más sabores.";
 
@@ -49,5 +51,20 @@ public class PreVenta {
     @PreUpdate
     public void validarDatos() {
         if (this.qrUrl != null && this.qrUrl.contains("demo")) this.qrUrl = null;
+    }
+
+
+    public String getHorarioDelivery() {
+        if (this.horarioDelivery != null && !this.horarioDelivery.trim().isEmpty()) {
+            return this.horarioDelivery;
+        }
+        return this.horarioEntrega != null ? this.horarioEntrega : "Por coordinar";
+    }
+
+    public String getHorarioRecojo() {
+        if (this.horarioRecojo != null && !this.horarioRecojo.trim().isEmpty()) {
+            return this.horarioRecojo;
+        }
+        return this.horarioEntrega != null ? this.horarioEntrega : "Por coordinar";
     }
 }
